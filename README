@@ -1,0 +1,12 @@
+12:01 < tlevine> Hi! I'm visiting from http://sudoroom.org/ . Is anyone inside? I'm not quite convinced 
+                 by https://at.hackerspace.pl/
+12:03 <@emeryth> tlevine: hi, the website really works, it's too early for hacking
+12:04 <@emeryth> try again later, around 6 pm
+12:07 < tlevine> okay thanks
+12:07 -!- Petros [~Icedove@ti0019a400-0165.bb.online.no] has quit [Ping timeout: 250 seconds]
+12:07 < tlevine> when i get in and understand how it works, i'll document it better so random people 
+                 like me actually believe it
+12:09 <@ar> tlevine: tl;dr: it's an opt-in system where you, if you're a member, claim a network device 
+            as their own and if the said device has a valid dhcp lease, you get listed as being at the 
+            hackerspace
+12:10 <@ar> tlevine: you can also claim a device and then set it as hidden
