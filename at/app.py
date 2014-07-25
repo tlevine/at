@@ -4,6 +4,7 @@ import logging
 import sqlite3
 from datetime import datetime
 from functools import wraps
+import queries
 
 from werkzeug.contrib.fixers import ProxyFix
 from flask import Flask, render_template, abort, g, \
@@ -58,11 +59,11 @@ def close_connection(exception):
         
 @app.route('/')
 def main_view():
-    return render_template('main.html', **now_at())
+    return render_template('main.html', **now_at(g.updater))
 
 @app.route('/api')
 def list_all():
-    result = now_at()
+    result = now_at(g.updater)
     def prettify_user((user, atime)):
         return {
             'login': user.login,
@@ -132,7 +133,7 @@ def login_required(f):
 @restrict_to_hs
 @login_required
 def claim_form():
-    hwaddr, name = g.get('updater').get_device(request.remote_addr)
+    hwaddr, name = g.updater.get_device(request.remote_addr)
     return render_template('claim.html', hwaddr=hwaddr, name=name)
 
 @app.route('/claim', methods=['POST'])
@@ -189,3 +190,13 @@ def device(id, action):
     if action == 'delete':
         delete_device(g.db, id, user)
     return redirect(url_for('account'))
+
+def now_at(updater):
+    devices = updater.get_active_devices()
+    device_infos = list(queries.get_device_infos(g.db, devices.keys()))
+    device_infos.sort(key=lambda di: devices.__getitem__)
+    users = list(dict((info.owner, devices[info.hwaddr][0]) for info in device_infos 
+        if info.owner and not info.ignored).iteritems())
+    users.sort(key=lambda (u, a): a, reverse=True)
+    unknown = set(devices.keys()) - set(d.hwaddr for d in device_infos)
+    return dict(users=users, unknown=unknown)

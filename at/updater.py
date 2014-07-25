@@ -5,7 +5,6 @@ from time import sleep, time
 from logging import getLogger
 
 import util
-import queries
 import parse
 
 logger = getLogger('at')
@@ -74,14 +73,3 @@ class DhcpdUpdater(MtimeUpdater):
     def file_changed(self, f):
         for hwaddr, atime, ip, name in parse.lease_file(f):
             self.update(hwaddr, atime, ip, name)
-
-def now_at():
-    devices = updater.get_active_devices()
-    device_infos = list(queries.get_device_infos(g.db, devices.keys()))
-    device_infos.sort(key=lambda di: devices.__getitem__)
-    users = list(dict((info.owner, devices[info.hwaddr][0]) for info in device_infos 
-        if info.owner and not info.ignored).iteritems())
-    users.sort(key=lambda (u, a): a, reverse=True)
-    unknown = set(devices.keys()) - set(d.hwaddr for d in device_infos)
-    return dict(users=users, unknown=unknown)
-
