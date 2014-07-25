@@ -7,7 +7,7 @@ setup(name='at-hackerspace',
       maintainer_email='_@thomaslevine.com',
       description='Determine who\'s in the hackerspace based on DHCP leases.',
       url='https://github.com/tlevine/at',
-      packages=['at-hackerspace'],
+      packages=['at'],
       install_requires = [
           'flask',
           'werkzeug',
