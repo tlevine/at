@@ -15,7 +15,8 @@ from collections import namedtuple
 from urllib import urlencode
 from hashlib import sha256
 
-import config
+from config import parser
+config = parser.parse_args()
 
 app = Flask('at')
 app.wsgi_app = ProxyFix(app.wsgi_app)
