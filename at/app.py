@@ -11,6 +11,7 @@ from flask import Flask, render_template, abort, g, \
     redirect, session, request, flash, url_for
 
 import util
+from updater import DhcpdUpdater
 from config import parser
 config = parser.parse_args()
 
@@ -200,3 +201,9 @@ def now_at(updater):
     users.sort(key=lambda (u, a): a, reverse=True)
     unknown = set(devices.keys()) - set(d.hwaddr for d in device_infos)
     return dict(users=users, unknown=unknown)
+
+def main():
+    updater = DhcpdUpdater(config.lease_file, config.timeout, config.lease_offset)
+    updater.start()
+    app.run('0.0.0.0', config.port, debug=config.debug)
+    g.updater = updater

@@ -2,5 +2,5 @@
 # -*- coding: utf-8 -*-
 import sys
 sys.path.append('.')
-import at.at
-at.at.main()
+import at.app
+at.app.main()
