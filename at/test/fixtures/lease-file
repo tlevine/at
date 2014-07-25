@@ -1,23 +1,39 @@
-line  # a comment
-lease 192.168.3.2
-field1 field2 field3
-starts what-goes-second? 2014/07/25 18:32:23;
-client-hostname chainsaw
-hardware what-goes-second? wlan0
+# The format of this file is documented in the dhcpd.leases(5) manual page.
+# This lease file was written by isc-dhcp-4.2.5-P1 Gentoo-r2
+# 
+# 17:13 < tlevine> ar or anyone, could you give me a lease file so I don't have to don't have to 
+#                  reconstruct the format? http://small.dada.pink/at/at/test/fixtures/lease-file
+# 17:14 -!- Redford [Redford@nat/google/x-zseexprdvljyniqa] has joined #hackerspace-pl
+# 17:14 < dfgg> raz pilem cydr ktory pachnial i smakowal mokrymm kartonem
+# 17:14 < dfgg> ,_,
+# 17:14 <@ood> Dead boar.
+# 17:14 < antoszka> tlevine: what's your need?
+# 17:15 <@ar> tlevine: http://arachnist.is-a.cat/c/9e47e3025e25209e8db5bd6a51bb9155.leases
+# 17:15 < tlevine> antoszka i want to make at.hackerspace.pl more explanatatory to new people
+# 17:15 <@ar> tlevine: that one's from my home router
+# 17:15 < dfgg> http://allegro.pl/konektor-antenowy-mcx-fme-26cm-kabel-hurt-i4454807287.html
+# 17:15 < repost> ↳ title: KONEKTOR ANTENOWY MCX/FME 26CM KABEL HURT (4454807287) - Allegro.pl - Więcej 
+#                 niż aukcje.
+# 17:15 < dfgg> ile to moze miec straty? ,_,
+# 17:15 < inf> wchujznaczków.leases D:
+# 17:15 < p_l> btw, Happy S.A.D. (Sysadmin Appreciation Day)
+# 17:16 <@ar> tlevine: but we 
+
+lease 10.24.0.13 {
+  starts 6 2013/03/23 21:54:30;
+  ends 6 2013/03/23 22:23:21;
+  tstp 6 2013/03/23 22:23:21;
+  cltt 6 2013/03/23 21:54:30;
+  binding state free;
+  hardware ethernet 08:60:6e:30:9e:df;
+  uid "\001\010`n0\236\337";
 }
-
-
-
-#
-# no lines here
-# because of the
-# comments
-#
-
-
-lease 192.168.3.8
-field1 field2 field3
-starts what-goes-second? 2014/07/23 12:32:23;
-client-hostname underscore
-hardware what-goes-second? wlan0
+lease 10.24.0.19 {
+  starts 4 2013/03/28 20:20:58;
+  ends 4 2013/03/28 21:20:58;
+  tstp 4 2013/03/28 21:20:58;
+  cltt 4 2013/03/28 20:20:58;
+  binding state free;
+  hardware ethernet 50:e5:49:52:d0:48;
+  uid "\001P\345IR\320H";
 }
