@@ -1,7 +1,7 @@
 line  # a comment
 lease 192.168.3.2
 field1 field2 field3
-starts 2014/07/25 18:32:23
+starts what-goes-second? 2014/07/25 18:32:23;
 client-hostname chainsaw
 hardware what-goes-second? wlan0
 }
@@ -17,7 +17,7 @@ hardware what-goes-second? wlan0
 
 lease 192.168.3.8
 field1 field2 field3
-starts 2014/07/23 12:32:23
+starts what-goes-second? 2014/07/23 12:32:23;
 client-hostname underscore
 hardware what-goes-second? wlan0
 }
