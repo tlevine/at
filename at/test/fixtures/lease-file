@@ -1,0 +1,7 @@
+line  # a comment
+field1 field2 field3
+starts 2014/07/25 18:32:23
+client-hostname chainsaw
+hardware what-goes-second? wlan0
+lease 192.168.3.2
+}

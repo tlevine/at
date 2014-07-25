@@ -169,7 +169,6 @@ class DnsmasqUpdater(MtimeUpdater):
 
 class DhcpdUpdater(MtimeUpdater):
     def file_changed(self, f):
-        lease = False
         for hwaddr, atime, ip, name in parse.lease_file(f):
             self.update(hwaddr, atime, ip, name)
         

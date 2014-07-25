@@ -1,4 +1,4 @@
-def lease_file(fp):
+def lease_file(fp, lease = False):
     for line in fp:
         line = line.split('#')[0]
         cmd = line.strip().split()
