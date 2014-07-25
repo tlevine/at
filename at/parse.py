@@ -1,5 +1,5 @@
 from datetime import datetime
-from time import mktime
+from time import sleep, mktime
 
 from iscpy import ParseISCString
 
@@ -12,7 +12,11 @@ def lease_file(fp, lease = False):
 
         hwaddr = lease['hardware'].split(' ')[1]
 
-        _starts = datetime.strptime(lease['starts'][2:], '%Y/%m/%d %H:%M:%S')
+        try:
+            _starts = datetime.strptime(lease['starts'][2:], '%Y/%m/%d %H:%M:%S')
+        except ImportError:
+            sleep(1)
+            _starts = datetime.strptime(lease['starts'][2:], '%Y/%m/%d %H:%M:%S')
         atime = mktime(_starts.utctimetuple())
 
         if 'client-hostname' in lease:

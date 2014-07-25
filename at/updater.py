@@ -4,6 +4,7 @@ import threading
 from time import sleep, time
 from logging import getLogger
 
+import util
 import queries
 import parse
 
@@ -42,7 +43,7 @@ class Updater(threading.Thread):
         self.active[hwaddr] = (atime, ip, name)
         self.lock.release()
         logger.info('updated %s with atime %s and ip %s',
-            hwaddr, strfts(atime), ip)
+            hwaddr, util.strfts(atime), ip)
 
 class MtimeUpdater(Updater):
     def __init__(self, lease_file, *a, **kw):

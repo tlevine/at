@@ -9,6 +9,7 @@ from werkzeug.contrib.fixers import ProxyFix
 from flask import Flask, render_template, abort, g, \
     redirect, session, request, flash, url_for
 
+import util
 from config import parser
 config = parser.parse_args()
 
@@ -44,10 +45,6 @@ restrict_to_hs = restrict_ip(prefix=config.claimable_prefix,
 def req_to_ctx():
     return dict(request.form.iteritems())
 
-@app.template_filter('strfts')
-def strfts(ts, format='%d/%m/%Y %H:%M'):
-    return datetime.fromtimestamp(ts).strftime(format)
-
 @app.before_request
 def make_connection():
     conn = sqlite3.connect(config.db)
@@ -70,7 +67,7 @@ def list_all():
         return {
             'login': user.login,
             'timestamp': atime,
-            'pretty_time': strfts(atime),
+            'pretty_time': util.strfts(atime),
             'url': user.url,
         }
     result['users'] = map(prettify_user, result['users'])
