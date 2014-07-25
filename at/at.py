@@ -122,6 +122,9 @@ class CapUpdater(Updater):
         Updater.__init__(self, *a, **kw)
     def run(self):
         while True:
+            if not os.path.isfile(self.cap_file):
+                app.logger.error('Cap file %s does not exist.' % self.cap_file)
+                break
             try:
                 with open(self.cap_file, 'r', buffering=0) as f:
                     app.logger.info('Updater ready on cap file %s', self.cap_file)
@@ -332,8 +335,6 @@ def device(id, action):
     return redirect(url_for('account'))
 
 def main():
-    import logging
-    app.logger.setLevel(logging.DEBUG)
     updater = DhcpdUpdater(config.lease_file, config.timeout, config.lease_offset)
     updater.start()
     app.run('0.0.0.0', config.port, debug=config.debug)
