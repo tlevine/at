@@ -1,5 +1,6 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
+import logging
 import sqlite3
 import threading
 import traceback
@@ -24,6 +25,13 @@ app.secret_key = config.secret_key
 app.jinja_env.add_extension('jinja2.ext.i18n')
 app.jinja_env.install_null_translations()
 updater = None
+
+sink = logging.StreamHandler() # stderr
+if config.debug:
+    sink.setLevel(logging.DEBUG)
+else:
+    sink.setLevel(logging.ERROR)
+app.logger.addHandler(sink)
 
 from functools import wraps
 
