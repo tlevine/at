@@ -165,12 +165,6 @@ class MtimeUpdater(Updater):
                     traceback.format_exc(e))
                 sleep(10.0)
 
-class DnsmasqUpdater(MtimeUpdater):
-    def file_changed(self, f):
-        for line in f:
-            ts, hwaddr, ip, name, client_id = line.split(' ')
-            self.update(hwaddr, int(ts), ip, name)
-
 class DhcpdUpdater(MtimeUpdater):
     def file_changed(self, f):
         for hwaddr, atime, ip, name in parse.lease_file(f):
