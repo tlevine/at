@@ -1,7 +1,9 @@
+import os
 import traceback
 import threading
 from time import sleep, time
 
+import queries
 import parse
 
 class Updater(threading.Thread):
@@ -70,7 +72,6 @@ class MtimeUpdater(Updater):
     def file_changed(self, f):
         pass
     def run(self):
-        import os
         while True:
             if not os.path.isfile(self.lease_file):
                 app.logger.error('Lease file %s does not exist.' % self.lease_file)
@@ -95,7 +96,7 @@ class DhcpdUpdater(MtimeUpdater):
 
 def now_at():
     devices = updater.get_active_devices()
-    device_infos = list(get_device_infos(g.db, devices.keys()))
+    device_infos = list(queries.get_device_infos(g.db, devices.keys()))
     device_infos.sort(key=lambda di: devices.__getitem__)
     users = list(dict((info.owner, devices[info.hwaddr][0]) for info in device_infos 
         if info.owner and not info.ignored).iteritems())
