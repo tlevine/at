@@ -1,3 +1,6 @@
+from datetime import datetime
+from time import mktime
+
 def lease_file(fp, lease = False):
     for line in fp:
         line = line.split('#')[0]

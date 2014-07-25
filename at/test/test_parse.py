@@ -1,8 +1,9 @@
+import os
 import json
 
 import nose.tools as n
 
-import parse
+import at.parse as parse
 
 def test_lease_file():
     with open(os.path.join('at','test','fixtures','lease-file')) as fp:
