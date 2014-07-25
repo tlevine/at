@@ -1,4 +1,4 @@
-
+from collections import namedtuple
 
 DeviceInfo = namedtuple('DeviceInfo', ['hwaddr', 'name', 'owner', 'ignored'])
 User = namedtuple('User', ['id', 'login', 'passwd', 'url'])
