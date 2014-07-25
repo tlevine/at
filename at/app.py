@@ -9,25 +9,8 @@ from werkzeug.contrib.fixers import ProxyFix
 from flask import Flask, render_template, abort, g, \
     redirect, session, request, flash, url_for
 
-from config import parser
-
-# Parse command-line arguments. This could be neater.
-config = parser.parse_args()
-
-# Logging
-sink = logging.StreamHandler() # stderr
-if config.debug:
-    sink.setLevel(logging.DEBUG)
-else:
-    sink.setLevel(logging.ERROR)
-app.logger.addHandler(sink)
-
 # Configure the app
 app = Flask('at')
-app.wsgi_app = ProxyFix(app.wsgi_app)
-app.secret_key = config.secret_key
-app.jinja_env.add_extension('jinja2.ext.i18n')
-app.jinja_env.install_null_translations()
 
 def restrict_ip(prefix='', exclude=[]):
     def decorator(f):
@@ -137,14 +120,14 @@ def login_required(f):
 @restrict_to_hs
 @login_required
 def claim_form():
-    hwaddr, name = updater.get_device(request.remote_addr)
+    hwaddr, name = flask.g.get('updater').get_device(request.remote_addr)
     return render_template('claim.html', hwaddr=hwaddr, name=name)
 
 @app.route('/claim', methods=['POST'])
 @restrict_to_hs
 @login_required
 def claim():
-    hwaddr, lease_name = updater.get_device(request.remote_addr)
+    hwaddr, lease_name = flask.g.get('updater').get_device(request.remote_addr)
     ctx = None
     if not hwaddr:
         ctx = { 'error': 'Invalid device.' }
@@ -194,3 +177,23 @@ def device(id, action):
     if action == 'delete':
         delete_device(g.db, id, user)
     return redirect(url_for('account'))
+
+def configure_app(config, updater):
+    '''
+    Configure the app according to the configuration,
+    and associate it with the updater.
+    '''
+    # Logging
+    sink = logging.StreamHandler() # stderr
+    if config.debug:
+        sink.setLevel(logging.DEBUG)
+    else:
+        sink.setLevel(logging.ERROR)
+    app.logger.addHandler(sink)
+
+    app.wsgi_app = ProxyFix(app.wsgi_app)
+    app.secret_key = config.secret_key
+    app.jinja_env.add_extension('jinja2.ext.i18n')
+    app.jinja_env.install_null_translations()
+    flask.g.set('updater', updater)
+    return app
