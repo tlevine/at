@@ -16,7 +16,7 @@ def lease_file(fp, lease = False):
             if(field.startswith('}')):
                 lease = False
                 if hwaddr:
-                    self.update(hwaddr, atime, ip, name)
+                    yield (hwaddr, atime, ip, name)
         elif cmd[0] == 'lease':
             ip = cmd[1]
             name, hwaddr, atime = [None] * 3
