@@ -339,8 +339,7 @@ def device(id, action):
         delete_device(g.db, id, user)
     return redirect(url_for('account'))
 
-port = 8080
-if __name__ == '__main__':
+def main():
     import logging
     app.logger.setLevel(logging.DEBUG)
     updater = DhcpdUpdater(config.lease_file, config.timeout, config.lease_offset)
