@@ -20,7 +20,7 @@ setup(name='at-hackerspace',
           'at-hackerspace',
       ],
       tests_require = ['nose'],
-      version='0.0.3',
+      version='0.0.1',
       license='AGPL',
       classifiers=[
           'Programming Language :: Python :: 2.7',
