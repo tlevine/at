@@ -137,6 +137,9 @@ class MtimeUpdater(Updater):
     def run(self):
         import os
         while True:
+            if not os.path.isfile(self.lease_file):
+                app.logger.error('Lease file %s does not exist.' % self.lease_file)
+                break
             try:
                 mtime = os.stat(self.lease_file).st_mtime
                 if mtime > self.last_modified:
