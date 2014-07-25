@@ -2,9 +2,12 @@ import os
 import traceback
 import threading
 from time import sleep, time
+from logging import getLogger
 
 import queries
 import parse
+
+logger = getLogger('at')
 
 class Updater(threading.Thread):
     def __init__(self,  timeout, lease_offset = 0, *a, **kw):
@@ -38,31 +41,8 @@ class Updater(threading.Thread):
         self.lock.acquire()
         self.active[hwaddr] = (atime, ip, name)
         self.lock.release()
-        app.logger.info('updated %s with atime %s and ip %s',
+        logger.info('updated %s with atime %s and ip %s',
             hwaddr, strfts(atime), ip)
-
-class CapUpdater(Updater):
-    def __init__(self, cap_file, *a, **kw):
-        self.cap_file = cap_file
-        Updater.__init__(self, *a, **kw)
-    def run(self):
-        while True:
-            if not os.path.isfile(self.cap_file):
-                app.logger.error('Cap file %s does not exist.' % self.cap_file)
-                break
-            try:
-                with open(self.cap_file, 'r', buffering=0) as f:
-                    app.logger.info('Updater ready on cap file %s', self.cap_file)
-                    while True:
-                        hwaddr = f.readline().strip()
-                        if not hwaddr:
-                            break
-                        self.update(hwaddr)
-                app.logger.warning('Cap file %s closed, reopening', self.cap_file)
-            except Exception as e:
-                app.logger.error('Updater got an exception:\n' + \
-                    traceback.format_exc(e))
-                sleep(10.0)
 
 class MtimeUpdater(Updater):
     def __init__(self, lease_file, *a, **kw):
@@ -74,18 +54,18 @@ class MtimeUpdater(Updater):
     def run(self):
         while True:
             if not os.path.isfile(self.lease_file):
-                app.logger.error('Lease file %s does not exist.' % self.lease_file)
+                logger.error('Lease file %s does not exist.' % self.lease_file)
                 break
             try:
                 mtime = os.stat(self.lease_file).st_mtime
                 if mtime > self.last_modified:
-                    app.logger.info('Lease file changed, updating')
+                    logger.info('Lease file changed, updating')
                     with open(self.lease_file, 'r') as f:
                         self.file_changed(f)
                 self.last_modified = mtime
                 sleep(3.0)
             except Exception as e:
-                app.logger.error('Updater got an exception:\n' + \
+                logger.error('Updater got an exception:\n' + \
                     traceback.format_exc(e))
                 sleep(10.0)
 
