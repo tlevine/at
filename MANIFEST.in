@@ -1,2 +1,2 @@
-include static/*/*
-include templates/*
+recursive-include at/templates *
+recursive-include at/static *
