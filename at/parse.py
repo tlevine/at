@@ -1,5 +1,5 @@
 def lease_file(fp):
-    for line in f:
+    for line in fp:
         line = line.split('#')[0]
         cmd = line.strip().split()
         if not cmd:
