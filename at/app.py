@@ -3,7 +3,7 @@ from hashlib import sha256
 import logging
 import sqlite3
 from datetime import datetime
-from functools import wraps
+from functools import wraps, partial
 import queries
 
 from werkzeug.contrib.fixers import ProxyFix
@@ -60,11 +60,11 @@ def close_connection(exception):
         
 @app.route('/')
 def main_view():
-    return render_template('main.html', **now_at(g.updater))
+    return render_template('main.html', **now_at())
 
 @app.route('/api')
 def list_all():
-    result = now_at(g.updater)
+    result = now_at()
     def prettify_user((user, atime)):
         return {
             'login': user.login,
@@ -192,7 +192,7 @@ def device(id, action):
         delete_device(g.db, id, user)
     return redirect(url_for('account'))
 
-def now_at(updater):
+def _now_at(updater):
     devices = updater.get_active_devices()
     device_infos = list(queries.get_device_infos(g.db, devices.keys()))
     device_infos.sort(key=lambda di: devices.__getitem__)
@@ -205,5 +205,6 @@ def now_at(updater):
 def main():
     updater = DhcpdUpdater(config.lease_file, config.timeout, config.lease_offset)
     updater.start()
+    now_at = partial(_now_at, updater)
     app.run('0.0.0.0', config.port, debug=config.debug)
     g.updater = updater
