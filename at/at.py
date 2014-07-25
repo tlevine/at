@@ -16,6 +16,7 @@ from collections import namedtuple
 from urllib import urlencode
 from hashlib import sha256
 
+import parse
 from config import parser
 config = parser.parse_args()
 

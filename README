@@ -13,3 +13,7 @@
 
 
 https://wiki.hackerspace.pl/projects:checkinator
+
+Run like so for testing. ::
+
+    ./at-hackerspace --lease-file at/test/fixtures/leases
