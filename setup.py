@@ -14,6 +14,7 @@ setup(name='at-hackerspace',
           'wsgiref',
           'pesto',
           'pcapy',
+          'iscpy',
       ],
       scripts = [
           'at-hackerspace',
