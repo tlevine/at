@@ -19,7 +19,7 @@ def purge_stale(timeout, active_devices, now = time()):
 
 def get_device(active_devices, ip):
     for hwaddr, (atime, dip, name) in \
-        active_devices.iteritems():
+        active_devices.items():
         if ip == dip:
             return hwaddr, name
     return None, None

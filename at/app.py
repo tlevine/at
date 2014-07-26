@@ -13,6 +13,7 @@ from flask import Flask, render_template, abort, g, \
 
 import util
 import updater
+import queries
 from config import parser
 config = parser.parse_args()
 
@@ -116,7 +117,7 @@ def login():
     login = request.form.get('login', '').lower()
     pwd = request.form.get('password', '')
     goto = request.values.get('goto') or '/'
-    user = get_user(g.db, login, pwd)
+    user = queries.get_user(g.db, login, pwd)
     if user:
         session['userid'] = user.id
         session['login'] = user.login
@@ -175,12 +176,12 @@ def set_password(conn, user, password):
 def account():
     if request.method == 'POST':
         old = request.form['old']
-        if get_user(g.db, session['login'], old) and \
+        if queries.get_user(g.db, session['login'], old) and \
             set_password(g.db, session['user'], request.form['new']):
                 flash('Password changed', category='message')
         else:
             flash('Could not change password!', category='error')
-    devices = get_user_devices(g.db, session['user'])
+    devices = queries.get_user_devices(g.db, session['user'])
     return render_template('account.html', devices=devices)
 
 def set_ignored(conn, hwaddr, user, value):

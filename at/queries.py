@@ -1,3 +1,4 @@
+from hashlib import sha256
 from collections import namedtuple
 
 DeviceInfo = namedtuple('DeviceInfo', ['hwaddr', 'name', 'owner', 'ignored'])
