@@ -24,12 +24,9 @@ def get_device(active_devices, ip):
             return hwaddr, name
     return None, None
 
-def update(lease_offset, timeout, active_devices, hwaddr, atime = None, ip = None, name = None):
-    _active_devices = purge_stale(timeout, active_devices)
-    if atime:
-        atime -= lease_offset
-    else:
-        atime = time() 
+def update(lease_offset, active_devices, hwaddr, atime, ip, name):
+    _active_devices = dict(active_devices)
+    atime = int(atime) - lease_offset
     _active_devices[hwaddr] = (atime, ip, name)
     logger.info('updated %s with atime %s and ip %s',
         hwaddr, util.strfts(atime), ip)
@@ -39,7 +36,7 @@ def watch(active_devices, lease_offset, timeout, lease_file, last_modified = 0):
     '''
     active_devices :: multiprocessing.Manager.dict
     '''
-    _update = partial(update, lease_offset, timeout)
+    _update = partial(update, lease_offset)
     while True:
         if not os.path.isfile(lease_file):
             logger.error('Lease file %s does not exist.' % lease_file)
@@ -49,6 +46,7 @@ def watch(active_devices, lease_offset, timeout, lease_file, last_modified = 0):
             if mtime > last_modified:
                 logger.info('Lease file changed, updating')
                 with open(lease_file, 'r') as f:
+                    active_devices = purge_stale(timeout, active_devices)
                     for hwaddr, atime, ip, name in parse.lease_file(f):
                         active_devices = _update(active_devices, hwaddr, atime, ip, name)
             last_modified = mtime
