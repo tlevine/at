@@ -69,7 +69,6 @@ def close_connection(exception):
 @app.route('/')
 def main_view():
     kwargs = now_at(active_devices, g.db)
-    kwargs['users'] = [(user, util.strfts(timestamp)) for (user, timestamp) in kwargs['users']]
     return render_template('main.html', **kwargs)
 
 @app.route('/api')
@@ -79,7 +78,7 @@ def list_all():
         return {
             'login': user.login,
             'timestamp': atime,
-            'pretty_time': util.strfts(atime),
+            'pretty_time': atime,
             'url': user.url,
         }
     result['users'] = map(prettify_user, result['users'])
