@@ -181,7 +181,8 @@ def account():
                 flash('Password changed', category='message')
         else:
             flash('Could not change password!', category='error')
-    devices = queries.get_user_devices(g.db, session['user'])
+    user = queries.User(*session['user'])
+    devices = queries.get_user_devices(g.db, user)
     return render_template('account.html', devices=devices)
 
 def set_ignored(conn, hwaddr, user, value):
