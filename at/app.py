@@ -13,7 +13,7 @@ from flask import Flask, render_template, abort, g, \
 
 import queries
 import util
-from updater import DhcpdUpdater
+import updater
 from config import parser
 config = parser.parse_args()
 
