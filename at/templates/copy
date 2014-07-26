@@ -1,0 +1,9 @@
+It looks like someone is in the hackerspace.
+This is because there are {%count%} active DHCP
+leases on the network.
+
+<table>
+  <tr><th>Name</th><th>Leased since</th></tr>
+  <tr><td>tlevine ({%ip address%})</td><td>single bar of a bar chart</td></tr>
+  <tr><td>unknown ({%ip address%})</td><td>single bar of a bar chart</td></tr>
+</table>
