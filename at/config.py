@@ -14,4 +14,6 @@ parser.add_argument('--secret-key', default = 'adaba')
 parser.add_argument('--claimable-prefix', default = '',
     help = 'You might switch this for "192.168.1", for example.')
 parser.add_argument('--claimable-exclude', metavar = '[exclude]', nargs = '+',
-        help = 'For example, "127.0.0.1"')
+    help = 'For example, "127.0.0.1"')
+parser.add_argument('--fake', action = 'store_true',
+    help = 'Fake the active device list (for development).')
