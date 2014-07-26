@@ -9,38 +9,29 @@ import parse
 
 logger = getLogger('at')
 
-class Updater(threading.Thread):
-    def __init__(self,  timeout, lease_offset = 0, *a, **kw):
-        self.timeout = timeout
-        self.lock = threading.Lock()
-        self.lease_offset = lease_offset
-        self.active = {}
-        threading.Thread.__init__(self, *a, **kw)
-    def purge_stale(self):
+active_devices = {}
+timeout = 
+
+    def purge_stale(active_devices):
+        active = dict(active_devices)
         now = time()
-        for addr, (atime, ip, name) in self.active.items():
-            if now - atime > self.timeout:
-                del self.active[addr]
-    def get_active_devices(self):
-        self.lock.acquire()
-        self.purge_stale()
-        r = dict(self.active)
-        self.lock.release()
-        return r
-    def get_device(self, ip):
+        for addr, (atime, ip, name) in active.items():
+            if now - atime > timeout:
+                del active[addr]
+
+    def get_device(active_devices, ip):
         for hwaddr, (atime, dip, name) in \
-            self.get_active_devices().iteritems():
+            active_devices.iteritems():
             if ip == dip:
                 return hwaddr, name
         return None, None
-    def update(self, hwaddr, atime = None, ip = None, name = None):
+
+    def update(active_devices, hwaddr, atime = None, ip = None, name = None):
         if atime:
             atime -= self.lease_offset
         else:
             atime = time() 
-        self.lock.acquire()
-        self.active[hwaddr] = (atime, ip, name)
-        self.lock.release()
+        self.active_devices[hwaddr] = (atime, ip, name)
         logger.info('updated %s with atime %s and ip %s',
             hwaddr, util.strfts(atime), ip)
 
