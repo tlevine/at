@@ -45,7 +45,7 @@ td:first-child, th:first-child {
   </p>
   <table>
     <tr><th>Name</th><th>Leased since</th></tr>
-    {% for user, hwaddr, ip, timestamp in devices %}
+    {% for user, hwaddr, ip, timestamp, formatted_time in devices %}
     <tr title="{{hwaddr}} on {{ip}}">
       <td>
         {% if user %}
@@ -59,7 +59,7 @@ td:first-child, th:first-child {
         {% endif %}
       </td>
       <td>
-          <div class="bar" style="width: {{100 * (now - timestamp)/(60 * 60)}}%;">{{timestamp}}</div>
+          <div class="bar" style="width: {{100 * (now - timestamp)/(60 * 60)}}%;">{{formatted_time}}</div>
       </td>
     </tr>
     {% endfor %}

@@ -70,6 +70,8 @@ def close_connection(exception):
 @app.route('/')
 def main_view():
     devices = now_at(active_devices, g.db)
+    devices = [list(row) + [datetime.fromtimestamp(row[3]).strftime('%H:%M')] for row in devices]
+    print(devices)
     kwargs = {'devices': devices,
         'now': time(),
         'unknowns': filter(lambda device: device[0] != None, devices)}
