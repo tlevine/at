@@ -68,7 +68,7 @@ def close_connection(exception):
         
 @app.route('/')
 def main_view():
-    kwargs = now_at(active_devices, g.db)
+    kwargs = {'users': now_at(active_devices, g.db)}
     return render_template('main.html', **kwargs)
 
 @app.route('/api')
