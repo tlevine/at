@@ -4,9 +4,23 @@ Who's at the hackerspace?
 {% endblock %}
 {% block content %}
   <style>
-  .bar {
-    height: 100%; background-color: black;
-  }
+table {
+  width: 100%;
+  max-width: 600px;
+}
+tr { position: relative; }
+td, th {
+    width: 75%;
+}
+td:first-child, th:first-child {
+    width: 25%;
+}
+.bar {
+  position: absolute;
+  height: 100%;
+  background-color: grey;
+  right: 0;
+}
   </style>
   <h2>Now at hackerspace!</h2>
   <p>
@@ -45,7 +59,7 @@ Who's at the hackerspace?
         {% endif %}
       </td>
       <td>
-          <div class="bar" style="width: {{(now - timestamp)/(60 * 60)}}%;">oo</div>
+          <div class="bar" style="width: {{100 * (now - timestamp)/(60 * 60)}}%;">{{timestamp}}</div>
       </td>
     </tr>
     {% endfor %}
