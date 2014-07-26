@@ -44,7 +44,7 @@ def restrict_ip(prefix='', exclude=[]):
         def func(*a, **kw):
             r_addr = request.remote_addr
             if not r_addr.startswith(prefix) or r_addr in exclude:
-                abort(403)
+                return render_template('outside_hackerspace.html'), 403
             return f(*a, **kw)
         return func
     return decorator
