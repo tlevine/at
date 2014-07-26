@@ -11,7 +11,6 @@ from werkzeug.contrib.fixers import ProxyFix
 from flask import Flask, render_template, abort, g, \
     redirect, session, request, flash, url_for
 
-import queries
 import util
 import updater
 from config import parser
@@ -64,11 +63,11 @@ def close_connection(exception):
         
 @app.route('/')
 def main_view():
-    return render_template('main.html', **now_at(active_devices, g.db))
+    return render_template('main.html', **updater.now_at(active_devices, g.db))
 
 @app.route('/api')
 def list_all():
-    result = now_at(active_devices, g.db)
+    result = updater.now_at(active_devices, g.db)
     def prettify_user((user, atime)):
         return {
             'login': user.login,

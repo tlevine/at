@@ -6,6 +6,7 @@ from functools import partial
 
 import util
 import parse
+import queries
 
 logger = getLogger('at')
 
@@ -15,6 +16,7 @@ def purge_stale(timeout, active_devices):
     for addr, (atime, ip, name) in active.items():
         if now - atime > timeout:
             del active[addr]
+    return active
 
 def get_device(active_devices, ip):
     for hwaddr, (atime, dip, name) in \
