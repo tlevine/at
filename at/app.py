@@ -5,7 +5,7 @@ import sqlite3
 from datetime import datetime
 from functools import wraps, partial
 from multiprocessing import Manager, Process
-
+from time import time
 
 from werkzeug.contrib.fixers import ProxyFix
 from flask import Flask, render_template, abort, g, \
@@ -70,7 +70,9 @@ def close_connection(exception):
 @app.route('/')
 def main_view():
     devices = now_at(active_devices, g.db)
-    kwargs = {'devices': devices, 'unknowns': filter(lambda device: device[0] != None, devices)}
+    kwargs = {'devices': devices,
+        'now': time(),
+        'unknowns': filter(lambda device: device[0] != None, devices)}
     return render_template('main.html', **kwargs)
 
 @app.route('/api')
