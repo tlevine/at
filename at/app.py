@@ -4,12 +4,14 @@ import logging
 import sqlite3
 from datetime import datetime
 from functools import wraps, partial
-import queries
+from multiprocessing import Manager, Process
+
 
 from werkzeug.contrib.fixers import ProxyFix
 from flask import Flask, render_template, abort, g, \
     redirect, session, request, flash, url_for
 
+import queries
 import util
 from updater import DhcpdUpdater
 from config import parser
@@ -193,7 +195,10 @@ def device(id, action):
     return redirect(url_for('account'))
 
 def main():
-    updater = DhcpdUpdater(config.lease_file, config.timeout, config.lease_offset)
-    updater.start()
+    g.active_devices = Manager().dict()
+
+    args = (g.active_devices, config.lease_offset, config.timeout, config.lease_file)
+    watcher = Process(target = updater.watch, args = args)
+    watcher.start()
+    
     app.run('0.0.0.0', config.port, debug=config.debug)
-    g.updater = updater

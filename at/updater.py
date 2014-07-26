@@ -1,6 +1,5 @@
 import os
 import traceback
-import threading
 from time import sleep, time
 from logging import getLogger
 
@@ -58,9 +57,6 @@ def watch(active_devices, lease_offset, timeout, lease_file, last_modified = 0):
             logger.error('Updater got an exception:\n' + \
                 traceback.format_exc(e))
             sleep(10.0)
-
-active_devices = Manager().dict()
-Process(target = watch, args = (active_devices, lease_offset, timeout, lease_file)
 
 def now_at(active_devices, db):
     'dict[devices] -> dict[users, unknown]'
