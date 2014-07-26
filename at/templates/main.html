@@ -3,25 +3,6 @@
 Who's at the hackerspace?
 {% endblock %}
 {% block content %}
-  <style>
-table {
-  width: 100%;
-  max-width: 600px;
-}
-tr { position: relative; }
-td, th {
-    width: 75%;
-}
-td:first-child, th:first-child {
-    width: 25%;
-}
-.bar {
-  position: absolute;
-  height: 100%;
-  background-color: grey;
-  right: 0;
-}
-  </style>
   <h2>Now at hackerspace!</h2>
   <p>
     {% if devices|length > 0 %}
@@ -43,7 +24,7 @@ td:first-child, th:first-child {
     {% if devices|length == 1 %}is{% else %}are{% endif %}
     {{ devices|length }} active DHCP lease{%if devices|length != 1%}s{% endif %}.)
   </p>
-  <table>
+  <table class="active">
     <tr><th>Name</th><th>Leased since</th></tr>
     {% for user, hwaddr, ip, timestamp, formatted_time in devices %}
     <tr title="{{hwaddr}} on {{ip}}">

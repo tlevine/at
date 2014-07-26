@@ -21,3 +21,19 @@ body {
   margin-left: auto;
   margin-right: auto;
 }
+table {
+  width: 100%;
+}
+.active tr { position: relative; }
+.active td, th {
+    width: 75%;
+}
+.active td:first-child, th:first-child {
+    width: 25%;
+}
+.bar {
+  position: absolute;
+  height: 100%;
+  background-color: grey;
+  right: 0;
+}
