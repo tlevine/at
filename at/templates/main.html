@@ -17,17 +17,20 @@ Now at hackerspace
   <table>
     <tr><th>Name</th><th>Leased since</th></tr>
     {% for user, hwaddr, ip, timestamp in users %}
-    <tr>
+    <tr title="{{hwaddr}} on {{ip}}">
       <td>
         {% if user %}
         {% if user.url %}
-        <a href="{{ user.url }}">{{ user.login }} ({{ timestamp }})</a>
+        <a href="{{ user.url }}">{{ user.login }}</a>
         {% else %}
-        {{ user.login }} ({{ timestamp }})
+        {{ user.login }}
         {% endif %}
         {% else %}
-        <small>Unknown person</small>
+        <small>Unknown</small>
         {% endif %}
+      </td>
+      <td>
+        {{timestamp}}
       </td>
     </tr>
     {% endfor %}
