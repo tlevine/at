@@ -22,7 +22,6 @@ def get_device_infos(conn, hwaddrs):
         ignored = row['ignored']
         yield DeviceInfo(row['hwaddr'], row['name'], owner, ignored)
 
-
 def get_user(conn, login, password):
     row = conn.execute('select userid, login, pass, url from users where\
      login = ? and pass = ?', [login, sha256(password).hexdigest()]).fetchone()
