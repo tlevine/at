@@ -10,7 +10,7 @@ import parse
 logger = getLogger('at')
 
 active_devices = {}
-timeout = 
+timeout = # config.timeout
 
     def purge_stale(active_devices):
         active = dict(active_devices)
@@ -27,13 +27,15 @@ timeout =
         return None, None
 
     def update(active_devices, hwaddr, atime = None, ip = None, name = None):
+        _active_devices = dict(active_devices)
         if atime:
             atime -= self.lease_offset
         else:
             atime = time() 
-        self.active_devices[hwaddr] = (atime, ip, name)
+        _active_devices[hwaddr] = (atime, ip, name)
         logger.info('updated %s with atime %s and ip %s',
             hwaddr, util.strfts(atime), ip)
+        return _active_devices
 
 class MtimeUpdater(Updater):
     def __init__(self, lease_file, *a, **kw):
