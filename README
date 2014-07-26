@@ -16,7 +16,7 @@ https://wiki.hackerspace.pl/projects:checkinator
 
 Run like so for testing. ::
 
-    ./at-hackerspace --lease-file at/test/fixtures/leases
+    ./at-hackerspace --lease-file at/test/fixtures/leases --fake --claimable-prefix=
 
 Upstream
 
