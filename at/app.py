@@ -192,9 +192,9 @@ def device(id, action):
         delete_device(g.db, id, user)
     return redirect(url_for('account'))
 
-def _now_at(updater):
-    devices = updater.get_active_devices()
-    device_infos = list(queries.get_device_infos(g.db, devices.keys()))
+def now_at(db, devices):
+    'dict[devices] -> dict[users, unknown]'
+    device_infos = list(queries.get_device_infos(db, devices.keys()))
     device_infos.sort(key=lambda di: devices.__getitem__)
     users = list(dict((info.owner, devices[info.hwaddr][0]) for info in device_infos 
         if info.owner and not info.ignored).iteritems())
@@ -205,6 +205,5 @@ def _now_at(updater):
 def main():
     updater = DhcpdUpdater(config.lease_file, config.timeout, config.lease_offset)
     updater.start()
-    now_at = partial(_now_at, updater)
     app.run('0.0.0.0', config.port, debug=config.debug)
     g.updater = updater
