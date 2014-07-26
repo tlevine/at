@@ -19,14 +19,7 @@ config = parser.parse_args()
 active_devices = Manager().dict() # messy
 
 if config.fake:
-    from time import time
-    def now_at(_, db):
-        users = [
-            ('this-owner', time() - 18 * 60),
-            ('that-owner', time() - 24 * 60),
-        ]
-        unknown = {'another-hwaddr', 'yet-another-hwaddr'}
-        return dict(users=users, unknown=unknown)
+    from util import fake_now_at as now_at
 else:
     now_at = updater.now_at
 
