@@ -192,16 +192,6 @@ def device(id, action):
         delete_device(g.db, id, user)
     return redirect(url_for('account'))
 
-def now_at(db, devices):
-    'dict[devices] -> dict[users, unknown]'
-    device_infos = list(queries.get_device_infos(db, devices.keys()))
-    device_infos.sort(key=lambda di: devices.__getitem__)
-    users = list(dict((info.owner, devices[info.hwaddr][0]) for info in device_infos 
-        if info.owner and not info.ignored).iteritems())
-    users.sort(key=lambda (u, a): a, reverse=True)
-    unknown = set(devices.keys()) - set(d.hwaddr for d in device_infos)
-    return dict(users=users, unknown=unknown)
-
 def main():
     updater = DhcpdUpdater(config.lease_file, config.timeout, config.lease_offset)
     updater.start()
