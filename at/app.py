@@ -60,11 +60,11 @@ def close_connection(exception):
         
 @app.route('/')
 def main_view():
-    return render_template('main.html', **now_at())
+    return render_template('main.html', **now_at(g.active_devices, g.db))
 
 @app.route('/api')
 def list_all():
-    result = now_at()
+    result = now_at(g.active_devices, g.db)
     def prettify_user((user, atime)):
         return {
             'login': user.login,
@@ -134,14 +134,14 @@ def login_required(f):
 @restrict_to_hs
 @login_required
 def claim_form():
-    hwaddr, name = g.updater.get_device(request.remote_addr)
+    hwaddr, name = updater.get_device(g.active_devices, request.remote_addr)
     return render_template('claim.html', hwaddr=hwaddr, name=name)
 
 @app.route('/claim', methods=['POST'])
 @restrict_to_hs
 @login_required
 def claim():
-    hwaddr, lease_name = g.get('updater').get_device(request.remote_addr)
+    hwaddr, lease_name = updater.get_device(g.active_devices, request.remote_addr)
     ctx = None
     if not hwaddr:
         ctx = { 'error': 'Invalid device.' }

@@ -34,8 +34,11 @@ def update(lease_offset, timeout, active_devices, hwaddr, atime = None, ip = Non
         hwaddr, util.strfts(atime), ip)
     return _active_devices
 
-
-def watch(lease_file, last_modified = 0, active_devices = {}):
+def watch(active_devices, lease_offset, timeout, lease_file, last_modified = 0):
+    '''
+    active_devices :: multiprocessing.Manager.dict
+    '''
+    _update = partial(update, lease_offset, timeout)
     while True:
         if not os.path.isfile(lease_file):
             logger.error('Lease file %s does not exist.' % lease_file)
@@ -46,7 +49,7 @@ def watch(lease_file, last_modified = 0, active_devices = {}):
                 logger.info('Lease file changed, updating')
                 with open(lease_file, 'r') as f:
                     for hwaddr, atime, ip, name in parse.lease_file(f):
-                        update(active_devices, hwaddr, atime, ip, name)
+                        active_devices = _update(active_devices, hwaddr, atime, ip, name)
             last_modified = mtime
             sleep(3.0)
         except KeyboardInterrupt:
@@ -56,12 +59,15 @@ def watch(lease_file, last_modified = 0, active_devices = {}):
                 traceback.format_exc(e))
             sleep(10.0)
 
-def now_at(db, devices):
+active_devices = Manager().dict()
+Process(target = watch, args = (active_devices, lease_offset, timeout, lease_file)
+
+def now_at(active_devices, db):
     'dict[devices] -> dict[users, unknown]'
-    device_infos = list(queries.get_device_infos(db, devices.keys()))
-    device_infos.sort(key=lambda di: devices.__getitem__)
-    users = list(dict((info.owner, devices[info.hwaddr][0]) for info in device_infos 
+    device_infos = list(queries.get_device_infos(db, active_devices.keys()))
+    device_infos.sort(key=lambda di: active_devices.__getitem__)
+    users = list(dict((info.owner, active_devices[info.hwaddr][0]) for info in device_infos 
         if info.owner and not info.ignored).iteritems())
     users.sort(key=lambda (u, a): a, reverse=True)
-    unknown = set(devices.keys()) - set(d.hwaddr for d in device_infos)
+    unknown = set(active_devices.keys()) - set(d.hwaddr for d in device_infos)
     return dict(users=users, unknown=unknown)
