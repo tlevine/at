@@ -73,6 +73,7 @@ def main_view():
 
 @app.route('/api')
 def list_all():
+    raise NotImplementedError
     result = now_at(active_devices, g.db)
     def prettify_user((user, atime)):
         return {
