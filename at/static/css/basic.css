@@ -15,3 +15,9 @@ td.invisible {
 td.visible {
   background-color: green
 }
+body {
+  width: 100%;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
