@@ -23,8 +23,8 @@ def get_device(active_devices, ip):
             return hwaddr, name
     return None, None
 
-def update(lease_offset, active_devices, hwaddr, atime = None, ip = None, name = None):
-    _active_devices = dict(active_devices)
+def update(lease_offset, timeout, active_devices, hwaddr, atime = None, ip = None, name = None):
+    _active_devices = purge_stale(timeout, active_devices)
     if atime:
         atime -= lease_offset
     else:
