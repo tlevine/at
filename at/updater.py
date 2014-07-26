@@ -10,9 +10,8 @@ import queries
 
 logger = getLogger('at')
 
-def purge_stale(timeout, active_devices):
+def purge_stale(timeout, active_devices, now = time()):
     active = dict(active_devices)
-    now = time()
     for addr, (atime, ip, name) in active.items():
         if now - atime > timeout:
             del active[addr]
