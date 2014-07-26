@@ -50,7 +50,7 @@ def restrict_ip(prefix='', exclude=[]):
     return decorator
 
 restrict_to_hs = restrict_ip(prefix=config.claimable_prefix, 
-    exclude=config.claimable_exclude)
+    exclude=['127.0.0.1'] if config.claimable_exclude_localhost else [])
 
 def req_to_ctx():
     return dict(request.form.iteritems())
