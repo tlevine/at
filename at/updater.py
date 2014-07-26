@@ -54,7 +54,8 @@ class MtimeUpdater(Updater):
                 if mtime > self.last_modified:
                     logger.info('Lease file changed, updating')
                     with open(self.lease_file, 'r') as f:
-                        self.file_changed(f)
+                        for hwaddr, atime, ip, name in parse.lease_file(f):
+                            self.update(hwaddr, atime, ip, name)
                 self.last_modified = mtime
                 sleep(3.0)
             except Exception as e:
@@ -62,7 +63,3 @@ class MtimeUpdater(Updater):
                     traceback.format_exc(e))
                 sleep(10.0)
 
-class DhcpdUpdater(MtimeUpdater):
-    def file_changed(self, f):
-        for hwaddr, atime, ip, name in parse.lease_file(f):
-            self.update(hwaddr, atime, ip, name)
