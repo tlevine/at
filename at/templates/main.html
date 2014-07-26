@@ -10,7 +10,7 @@ Now at hackerspace
     <li>
     {% if user.url %}
       <a href="{{ user.url }}">{% endif %}
-      {{ user.login }} ({{ timestamp|strfts() }})
+      {{ user.login }} ({{ timestamp }})
       {% if user.url %}</a>
     {% endif %}
     </li>

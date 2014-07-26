@@ -63,7 +63,9 @@ def close_connection(exception):
         
 @app.route('/')
 def main_view():
-    return render_template('main.html', **updater.now_at(active_devices, g.db))
+    kwargs = updater.now_at(active_devices, g.db)
+    kwargs['users'] = [(user, util.strfts(timestamp)) for (user, timestamp) in kwargs['users']]
+    return render_template('main.html', **kwargs)
 
 @app.route('/api')
 def list_all():
