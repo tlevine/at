@@ -2,6 +2,7 @@ import os
 import traceback
 from time import sleep, time
 from logging import getLogger
+from functools import partial
 
 import util
 import parse

@@ -17,6 +17,8 @@ import updater
 from config import parser
 config = parser.parse_args()
 
+active_devices = Manager().dict() # messy
+
 # Logging
 sink = logging.StreamHandler() # stderr
 if config.debug:
@@ -62,11 +64,11 @@ def close_connection(exception):
         
 @app.route('/')
 def main_view():
-    return render_template('main.html', **now_at(g.active_devices, g.db))
+    return render_template('main.html', **now_at(active_devices, g.db))
 
 @app.route('/api')
 def list_all():
-    result = now_at(g.active_devices, g.db)
+    result = now_at(active_devices, g.db)
     def prettify_user((user, atime)):
         return {
             'login': user.login,
@@ -136,14 +138,14 @@ def login_required(f):
 @restrict_to_hs
 @login_required
 def claim_form():
-    hwaddr, name = updater.get_device(g.active_devices, request.remote_addr)
+    hwaddr, name = updater.get_device(active_devices, request.remote_addr)
     return render_template('claim.html', hwaddr=hwaddr, name=name)
 
 @app.route('/claim', methods=['POST'])
 @restrict_to_hs
 @login_required
 def claim():
-    hwaddr, lease_name = updater.get_device(g.active_devices, request.remote_addr)
+    hwaddr, lease_name = updater.get_device(active_devices, request.remote_addr)
     ctx = None
     if not hwaddr:
         ctx = { 'error': 'Invalid device.' }
@@ -195,10 +197,8 @@ def device(id, action):
     return redirect(url_for('account'))
 
 def main():
-    g.active_devices = Manager().dict()
-
-    args = (g.active_devices, config.lease_offset, config.timeout, config.lease_file)
+    args = (active_devices, config.lease_offset, config.timeout, config.lease_file)
     watcher = Process(target = updater.watch, args = args)
     watcher.start()
-    
     app.run('0.0.0.0', config.port, debug=config.debug)
+    
