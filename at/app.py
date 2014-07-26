@@ -18,6 +18,14 @@ config = parser.parse_args()
 
 active_devices = Manager().dict() # messy
 
+if config.fake:
+    def now_at(_, db):
+        users = {'this-owner': 'this-hwaddr', 'that-owner': 'that-hwaddr'}
+        unknown = {'another-hwaddr', 'yet-another-hwaddr'}
+        return dict(users=users, unknown=unknown)
+else:
+    now_at = updater.now_at
+
 # Logging
 sink = logging.StreamHandler() # stderr
 if config.debug:
@@ -63,13 +71,13 @@ def close_connection(exception):
         
 @app.route('/')
 def main_view():
-    kwargs = updater.now_at(active_devices, g.db)
+    kwargs = now_at(active_devices, g.db)
     kwargs['users'] = [(user, util.strfts(timestamp)) for (user, timestamp) in kwargs['users']]
     return render_template('main.html', **kwargs)
 
 @app.route('/api')
 def list_all():
-    result = updater.now_at(active_devices, g.db)
+    result = now_at(active_devices, g.db)
     def prettify_user((user, atime)):
         return {
             'login': user.login,
