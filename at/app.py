@@ -68,7 +68,8 @@ def close_connection(exception):
         
 @app.route('/')
 def main_view():
-    kwargs = {'users': now_at(active_devices, g.db)}
+    devices = now_at(active_devices, g.db)
+    kwargs = {'devices': devices, 'unknowns': filter(lambda device: device[0] != None, devices)}
     return render_template('main.html', **kwargs)
 
 @app.route('/api')

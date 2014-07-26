@@ -1,22 +1,32 @@
 {% extends "basic.html" %}
 {% block title %}
-Now at hackerspace
+Who's at the hackerspace?
 {% endblock %}
 {% block content %}
   <h2>Now at hackerspace!</h2>
   <p>
-    {% if users|length > 0 %}
+    {% if devices|length > 0 %}
     It looks like someone is
     {% else %}
     It doesn't look like anyone
     {% endif %}
     is in the <a href="http://www.hackerspace.pl">hackerspace</a>.
-    This is because there are {{ users|length }} active DHCP
-    leases on the network.
+    This is because there
+    {% if devices|length == 0 %}
+    are no devices
+    {% elif devices|length == 1 %}
+    is 1 device
+    {% else %}
+    are {{ devices|length }} devices
+    {% endif %}
+    on the network.
+    (More precisely, there
+    {% if devices|length == 1 %}is{% else %}are{% endif %}
+    {{ devices|length }} active DHCP lease{%if devices|length != 1%}s{% endif %}.)
   </p>
   <table>
     <tr><th>Name</th><th>Leased since</th></tr>
-    {% for user, hwaddr, ip, timestamp in users %}
+    {% for user, hwaddr, ip, timestamp in devices %}
     <tr title="{{hwaddr}} on {{ip}}">
       <td>
         {% if user %}
@@ -35,5 +45,14 @@ Now at hackerspace
     </tr>
     {% endfor %}
   </table>
-  <p>Are you one of the unknown users? <a href="claim">Claim your device!</a></p>
+  {% if unknowns > 0 %}
+  <p>
+    {% if unknowns == 1 %}
+    Is the unknown device yours?
+    {% else %}
+    Is one of the unknown devices yours?
+    {% endif %}
+    <a href="claim">Claim your device!</a>
+  </p>
+  {% endif %}
 {% endblock %}
