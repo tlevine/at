@@ -38,3 +38,24 @@ def test_update():
 
     observed = u.update(lease_offset, active_devices, hwaddr, atime, ip, name)
     n.assert_dict_equal(observed, expected)
+
+def test_now_at():
+    active_devices = {
+        'claimed-hwaddr': (1406362740.570188, '192.168.1.2', 'wildebeest'),
+        'unclaimed-hwaddr': (1006362740.0, '192.168.1.82', 'occurrence'),
+    }
+    expected = {
+        (tlevine, 'claimed-hwaddr', '192.168.1.2', t(18)),
+        (None, 'unclaimed-hwaddr', '192.168.1.82', t(17)),
+    }
+
+    observed = now_at(active_devices, db, get_device_infos = fake_get_device_infos):
+
+    'dict[devices] -> dict[users, unknown]'
+    device_infos = list(queries.get_device_infos(db, active_devices.keys()))
+    device_infos.sort(key=lambda di: active_devices.__getitem__)
+    users = list(dict((info.owner, active_devices[info.hwaddr][0]) for info in device_infos 
+        if info.owner and not info.ignored).iteritems())
+    users.sort(key=lambda (u, a): a, reverse=True)
+    unknown = set(active_devices.keys()) - set(d.hwaddr for d in device_infos)
+    return dict(users=users, unknown=unknown)
