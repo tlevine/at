@@ -66,11 +66,3 @@ def now_at(active_devices, db, get_device_infos = queries.get_device_infos):
             active_devices[device_info.hwaddr][1],
             active_devices[device_info.hwaddr][0]
         )
-
-#   device_infos.sort(key=lambda di: active_devices.__getitem__)
-#   users = list(dict((info.owner, active_devices[info.hwaddr][0]) for info in device_infos 
-#       if not info.ignored).iteritems())
-#   users.sort(key=lambda (u, a): a, reverse=True)
-#   return users
-#   unknown = set(active_devices.keys()) - set(d.hwaddr for d in device_infos)
-#   return dict(users=users, unknown=unknown)
