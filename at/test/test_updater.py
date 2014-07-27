@@ -47,7 +47,7 @@ def test_now_at():
     }
     tlevine = q.User(3, 'tlevine', 'blah blah blah', 'http://dada.pink')
     expected = [
-        (tlevine, u'claimed-hwaddr', u'192.168.1.2', active_devices[u'claimed-hwaddr'][0]),
+        (u'tlevine', u'claimed-hwaddr', u'192.168.1.2', active_devices[u'claimed-hwaddr'][0]),
         (None, u'unclaimed-hwaddr', u'192.168.1.82', active_devices[u'unclaimed-hwaddr'][0]),
     ]
     def fake_get_device_infos(db, hwaddrs):
@@ -55,5 +55,5 @@ def test_now_at():
             owner = u'tlevine' if hwaddr == u'claimed-hwaddr' else None
             yield q.DeviceInfo(hwaddr, active_devices[hwaddr][2], owner, 0)
 
-    observed = u.now_at(active_devices, None, get_device_infos = fake_get_device_infos)
+    observed = list(u.now_at(active_devices, None, get_device_infos = fake_get_device_infos))
     n.assert_list_equal(observed, expected)
