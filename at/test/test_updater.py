@@ -1,5 +1,6 @@
 import nose.tools as n
 
+import at.queries as q
 import at.updater as u
 
 def test_purge_stale():
@@ -44,14 +45,15 @@ def test_now_at():
         u'claimed-hwaddr': (1406362740.570188, u'192.168.1.2', u'wildebeest'),
         u'unclaimed-hwaddr': (1006362740.0, u'192.168.1.82', u'occurrence'),
     }
+    tlevine = q.User(3, 'tlevine', 'blah blah blah', 'http://dada.pink')
     expected = [
-        (tlevine, u'claimed-hwaddr', u'192.168.1.2', t(18)),
-        (None, u'unclaimed-hwaddr', u'192.168.1.82', t(17)),
+        (tlevine, u'claimed-hwaddr', u'192.168.1.2', active_devices[u'claimed-hwaddr'][0]),
+        (None, u'unclaimed-hwaddr', u'192.168.1.82', active_devices[u'unclaimed-hwaddr'][0]),
     ]
     def fake_get_device_infos(db, hwaddrs):
-        for hwaddr in hwaddrs
+        for hwaddr in hwaddrs:
             owner = u'tlevine' if hwaddr == u'claimed-hwaddr' else None
-            yield DeviceInfo(hwaddr, active_devices[hwaddr][2], owner, 0)
+            yield q.DeviceInfo(hwaddr, active_devices[hwaddr][2], owner, 0)
 
-    observed = now_at(active_devices, None, get_device_infos = fake_get_device_infos):
+    observed = u.now_at(active_devices, None, get_device_infos = fake_get_device_infos)
     n.assert_list_equal(observed, expected)

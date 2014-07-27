@@ -58,9 +58,9 @@ def watch(active_devices, lease_offset, timeout, lease_file, last_modified = 0):
                 traceback.format_exc(e))
             sleep(10.0)
 
-def now_at(active_devices, db):
+def now_at(active_devices, db, get_device_infos = queries.get_device_infos):
     'dict[devices] -> dict[users, unknown]'
-    device_infos = list(queries.get_device_infos(db, active_devices.keys()))
+    device_infos = list(get_device_infos(db, active_devices.keys()))
     device_infos.sort(key=lambda di: active_devices.__getitem__)
     users = list(dict((info.owner, active_devices[info.hwaddr][0]) for info in device_infos 
         if info.owner and not info.ignored).iteritems())
