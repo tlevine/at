@@ -1,5 +1,5 @@
 from datetime import datetime
-from time import sleep, mktime
+from time import mktime
 
 from iscpy import ParseISCString
 
@@ -19,4 +19,5 @@ def lease_file(fp):
             name = lease['client-hostname'][1][1:-2]
         else:
             name = None
+
         yield (hwaddr, atime, ip, name)
